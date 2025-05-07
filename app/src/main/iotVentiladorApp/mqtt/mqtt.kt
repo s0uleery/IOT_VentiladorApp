@@ -1,12 +1,11 @@
-package com.tuempresa.ventiladorapp.mqtt
-
 import android.content.Context
 import android.util.Log
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
-import com.tuempresa.ventiladorapp.utils.Constants
+import com.s0uleery.iotventiladorapp.utils.Constants
 
 class MqttHandler(context: Context) {
+
     private val client = MqttAndroidClient(
         context,
         Constants.MQTT_SERVER_URI,
@@ -21,18 +20,17 @@ class MqttHandler(context: Context) {
 
         client.connect(options, null, object : IMqttActionListener {
             override fun onSuccess(asyncActionToken: IMqttToken?) {
-                Log.d("MQTT", "Conectado con éxito")
+                Log.d("MQTT", "✅ Conectado a MQTT")
             }
 
             override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
-                Log.e("MQTT", "Fallo al conectar: ${exception?.message}")
+                Log.e("MQTT", "❌ Error al conectar: ${exception?.message}")
             }
         })
     }
 
-    fun publishVelocidad(vel: String) {
-        val message = MqttMessage(vel.toByteArray())
-        message.qos = 1
+    fun publishVelocidad(velocidad: String) {
+        val message = MqttMessage(velocidad.toByteArray()).apply { qos = 1 }
         client.publish(Constants.MQTT_TOPIC, message)
     }
 }
